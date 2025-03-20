@@ -1,8 +1,8 @@
 <?php
 
-namespace AdCash\lib;
+namespace Task1\lib;
 
-use AdCash\interfaces\Model;
+use Task1\interfaces\Model;
 
 /**
  * Class CsvParser is a generic CSV parser that can parse CSV files 

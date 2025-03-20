@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use AdCash\BidFinder;
+use Task1\BidFinder;
 
 class testTask1 extends Test
 {

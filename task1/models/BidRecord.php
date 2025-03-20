@@ -1,8 +1,8 @@
 <?php
 
-namespace AdCash\models;
+namespace Task1\models;
 
-use AdCash\interfaces\Model;
+use Task1\interfaces\Model;
 
 
 /**
@@ -19,7 +19,7 @@ class BidRecord implements Model
 
     function setFromArray(array $data): void
     {
-        if(is_numeric($data[0]) === false || is_numeric($data[1]) === false) {
+        if (is_numeric($data[0]) === false || is_numeric($data[1]) === false) {
             throw new \Exception("Invalid non-numeric data is supplied!");
         }
         $this->id = intval($data[0]);

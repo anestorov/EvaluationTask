@@ -1,11 +1,13 @@
-<?php 
-namespace AdCash\interfaces;
+<?php
+
+namespace Task1\interfaces;
 
 /**
  * Interface of data models
  * 
  * @package AdCash
  */
-interface Model {
+interface Model
+{
     function setFromArray(array $data): void;
 }

@@ -3,12 +3,14 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "AdCash\\": "src/",
+            "Task1\\": "task1/",
+            "Task2\\": "task2/",
+            "Task3\\": "task3/",
             "Tests\\": "tests/"
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "php tests/run.php"
     },
     "authors": [
         {

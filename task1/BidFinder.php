@@ -1,10 +1,10 @@
 <?php
 
-namespace AdCash;
+namespace Task1;
 
-use AdCash\lib\CsvParser;
-use AdCash\models\BidFinderSolution;
-use AdCash\models\BidRecord;
+use Task1\lib\CsvParser;
+use Task1\models\BidFinderSolution;
+use Task1\models\BidRecord;
 
 /**
  * This class is responsible for finding the highest and second highest bid from a CSV file
