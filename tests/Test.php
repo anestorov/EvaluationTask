@@ -8,10 +8,10 @@ class Test {
         $location = $trace[1]['function'] . ' in '. $trace[1]['class'];
 
         if ($condition) {
-            echo "Test passed - $location\n";
+            echo "✅ Passed - $location\n";
         } else {
             
-            echo "Test failed - $location\n";
+            echo "❌ Failed - $location\n";
         }
     }
 }

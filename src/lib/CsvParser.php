@@ -1,45 +1,60 @@
 <?php
+
 namespace AdCash\lib;
 
 use AdCash\interfaces\Model;
 
 /**
- * Class CsvParser
+ * Class CsvParser is a generic CSV parser that can parse CSV files 
+ * and calls a callback function when processing each row
+ * 
  * @package AdCash\lib
  * @template T of Model
  */
 class CsvParser
 {
     /**
-     * CsvParser constructor.
-     * @param class-string<T> $rowClass
-     * @param bool $skipLabels
+     * CsvParser constructor. It requires the class of the data model for each row
+     * 
+     * @param class-string<T> $rowClass The class of the row model
+     * @param bool $skipHeader Whether to skip the header row
+     * @param string $separator The separator character
+     * @param string $enclosure The enclosure character
+     * @param string $escape The escape character
      * @throws \Exception
      */
-    public function __construct(private string $modelClass, private bool $skipLabels = true)
-    {
+    public function __construct(
+        private string $modelClass,
+        private bool $skipHeader = true,
+        private string $separator = ',',
+        private string $enclosure = '"',
+        private string $escape = '\\'
+    ) {
         if (!is_subclass_of($modelClass, Model::class)) {
-            throw new \Exception("Class must implement MyInterface");
+            throw new \Exception("Supplied Model Class must implement Model Interface");
         }
     }
 
     /**
+     * Opens file pointer and process it line by line. 
+     * For each line it calls the callback function with the parsed model
+     * 
      * @param string $filename
      * @param callable(T): void $callback
      */
-    public function parse(string $filename, callable $callback)
+    public function parse(string $fileURI, callable $callback)
     {
-        $h = fopen($filename, "r");
+        $h = fopen($fileURI, "r");
 
         if (!$h) {
-            die("Cannot open file");
+            throw new \Exception("Could not open file $fileURI");
         }
 
-        $labelsSkipped = false;
+        $headerSkipped = false;
 
-        while ($line = fgetcsv($h, escape: '"')) {
-            if ($this->skipLabels && !$labelsSkipped) {
-                $labelsSkipped = true;
+        while ($line = $this->parseRow($h)) {
+            if ($this->skipHeader && !$headerSkipped) {
+                $headerSkipped = true;
                 continue;
             }
             $model = new $this->modelClass();
@@ -47,5 +62,21 @@ class CsvParser
             $callback($model);
         }
         fclose($h);
+    }
+
+    /**
+     * Abstracts fgetcsv() function
+     * 
+     * @param resource $fileHandle
+     * @return array|false
+     */
+    private function parseRow($fileHandle): array|false
+    {
+        return fgetcsv(
+            stream: $fileHandle,
+            separator: $this->separator,
+            enclosure: $this->enclosure,
+            escape: $this->escape
+        );
     }
 }
