@@ -1,0 +1,20 @@
+{
+    "name": "anest/ad-cash",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "AdCash\\": "src/",
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "authors": [
+        {
+            "name": "Asparuh Nestorov",
+            "email": "anestorov@gmail.com"
+        }
+    ],
+    "require": {}
+}

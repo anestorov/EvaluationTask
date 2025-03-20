@@ -1,0 +1,41 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore Composer dependencies
+/vendor/
+
+# Ignore environment variables
+.env
+
+# Ignore IDE specific files
+.vscode/
+.idea/
+
+# Ignore node_modules if using Node.js
+node_modules/
+
+# Ignore compiled files
+*.class
+*.pyc
+*.o
+*.out
+
+# Ignore coverage reports
+coverage/
+*.lcov
+
+# Ignore PHPUnit result cache
+.phpunit.result.cache
+
+# Ignore other files
+*.cache
+*.bak
+*.swp
+*.tmp
+*.temp
