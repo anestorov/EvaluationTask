@@ -63,10 +63,55 @@ function solveMaze() {
     return;
   }
   wallsNumber = document.querySelector("#passWalNumber").value;
+  const animated = document.querySelector("#animateSolution").checked;
+  const animationSpeed = document.querySelector("#animationSpeed").value;
   initializePaths();
-  exploreMaze();
   renderMap();
-  drawShortestPath();
+
+  const itr = exploreMaze();
+  if (animated) {
+    let itterations = 0;
+    const timer = setInterval(() => {
+      const val = itr.next().value;
+      if (!val) {
+        clearInterval(timer);
+        renderMap();
+        drawShortestPath();
+        return;
+      }
+      const { node } = val;
+      document.querySelector("#itterations").innerText = itterations++;
+
+      map.forEach((row) => {
+        row.forEach((cell) => {
+          const cellElement = document.querySelector(
+            `#c-${cell.row}-${cell.col}`
+          );
+          cellElement.style.backgroundColor = cell.isWall ? "gray" : "white";
+        });
+      });
+      document.querySelector(
+        `#c-${node.row}-${node.col}`
+      ).style.backgroundColor = "lightblue";
+      // document.querySelector(
+      //   `#c-${neighbor.row}-${neighbor.col}`
+      // ).style.backgroundColor = "yellow";
+      //set cell labels
+      document.querySelector(`#c-${node.row}-${node.col} span`).innerText =
+        node.paths
+          .map((path) => (path.length >= MaxNumber ? "x" : path.length))
+          .join("/");
+      // document.querySelector(
+      //   `#c-${neighbor.row}-${neighbor.col} span`
+      // ).innerText = neighbor.paths
+      //   .map((path) => (path.length >= MaxNumber ? "x" : path.length))
+      //   .join("/");
+    }, animationSpeed);
+  } else {
+    itr.forEach(() => {});
+    renderMap();
+    drawShortestPath();
+  }
 }
 function initializePaths() {
   map.forEach((row) => {
@@ -106,7 +151,8 @@ function drawShortestPath() {
   document.querySelector("#shortestPathLength").innerText = shortestPathLength;
 }
 
-function exploreMaze() {
+function* exploreMaze() {
+  const algo = document.querySelector('input[name="algo"]:checked').value;
   const queue = [];
   const root = map[0][0];
   root.paths.forEach((path) => {
@@ -116,12 +162,16 @@ function exploreMaze() {
   queue.push(root);
   let itterations = 0;
   while (queue.length) {
-    itterations++;
-    const node = queue.shift();
+    let node = null;
+    if (algo == "BFS") node = queue.shift();
+    else if (algo == "DFS") node = queue.pop();
+    else break;
+    if (node.row == map.length - 1 && node.col == map[0].length - 1) {
+      if (algo == "BFS") break;
+      else continue;
+    }
     const neighbors = getNeighbors(node);
-
-    neighbors.forEach((neighbor) => {
-
+    for (const neighbor of neighbors) {
       if (neighbor.isWall) {
         neighbor.paths.forEach((path, i) => {
           if (i === 0) {
@@ -147,17 +197,20 @@ function exploreMaze() {
           }
         });
       }
-    });
-    document.querySelector("#itterations").innerText = itterations;
+    }
+    itterations++;
+    yield { node };
   }
+  document.querySelector("#itterations").innerText = itterations;
 }
 function getNeighbors(node) {
   const neighbors = [];
   const [r, c] = [node.row, node.col];
-  if (map[r]?.[c + 1]) neighbors.push(map[r][c + 1]);
-  if (map[r + 1]?.[c]) neighbors.push(map[r + 1][c]);
-  if (map[r]?.[c - 1]) neighbors.push(map[r][c - 1]);
+  
   if (map[r - 1]?.[c]) neighbors.push(map[r - 1][c]);
+  if (map[r]?.[c - 1]) neighbors.push(map[r][c - 1]);
+  if (map[r + 1]?.[c]) neighbors.push(map[r + 1][c]);
+  if (map[r]?.[c + 1]) neighbors.push(map[r][c + 1]);
   return neighbors;
 }
 
@@ -203,6 +256,7 @@ function createMap(rows, cols) {
 }
 
 function renderMap() {
+  const withLabels = document.querySelector("#withLabels").checked;
   const mapContainer = document.querySelector("#mapContainer");
   mapContainer.innerHTML = "";
 
@@ -217,19 +271,22 @@ function renderMap() {
       rowElement.appendChild(cellElement);
       cellElement.style.backgroundColor = cell.isWall ? "gray" : "white";
 
-      const span = document.createElement("span");
-      span.style.fontSize = "8px";
-      const lengths = cell?.paths?.map((path) =>
-        path.length >= MaxNumber ? "x" : path.length
-      );
-      span.innerText = lengths?.join("/");
+      if (withLabels) {
+        const span = document.createElement("span");
+        span.style.fontSize = "8px";
+        const lengths = cell?.paths?.map((path) =>
+          path.length >= MaxNumber ? "x" : path.length
+        );
+        span.innerText = lengths?.join("/");
 
-      cellElement.appendChild(span);
+        cellElement.appendChild(span);
+      }
 
       if (r == 0 && c == 0) return;
       if (r == map.length - 1 && c == map[0].length - 1) return;
       const cb = document.createElement("input");
       cb.type = "checkbox";
+      cb.id = `cb-${r}-${c}`;
       cb.checked = cell.isWall;
       cb.onclick = function () {
         if (cb.checked) {
