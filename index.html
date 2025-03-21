@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .mapControls {
+        display: grid;
+        grid-template-columns: 100px auto;
+        gap: 10px;
+      }
+      .layoutContainer {
+        display: grid;
+        grid-template-columns: 300px auto;
+        gap: 10px;
+      }
+      .layoutContainer div:nth-child(2) {
+        border: 1px solid black;
+      }
+    </style>
+    <script defer src="lib.js"></script>
+  </head>
+  <body>
+    <div class="layoutContainer">
+      <div>
+        <p class="mapControls">
+          <label for="mapSelect">Select Map:</label>
+          <select id="mapSelect"></select>
+        </p>
+
+        <p class="mapControls">
+          <label for="mapRows">Rows:</label>
+          <input type="number" min="2" max="20" id="mapRows" value="2" />
+          <label for="mapCols">Cols:</label>
+          <input type="number" min="2" max="20" id="mapCols" value="2" />
+          <button id="saveMap">Save</button>
+          <button id="createMap">Create Map</button>
+        </p>
+        <p class="mapControls">
+          <label for="passWalNumber">Walls that can pass through:</label>
+          <input type="number" min="0" max="10" value="1" id="passWalNumber" />
+          <label for="animateSolution"
+            ><input type="checkbox" id="animateSolution" /> Animate</label
+          >
+
+          <button id="solveMaze">Solve Maze</button>
+        </p>
+        <p id="solution">
+          <span>Iterrations: </span>
+          <b id="itterations"></b>
+          <br />
+          <span>Path Length: </span>
+          <b id="shortestPathLength"></b>
+        </p>
+      </div>
+      <div id="mapContainer"></div>
+    </div>
+  </body>
+</html>
