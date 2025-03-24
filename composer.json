@@ -10,7 +10,11 @@
         }
     },
     "scripts": {
-        "test": "php tests/run.php"
+        "test": "php tests/run.php",
+        "task3": "php -S localhost:8888 -t task3/"
+    },
+    "config": {
+        "process-timeout": 0
     },
     "authors": [
         {
