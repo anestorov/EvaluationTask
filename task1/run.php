@@ -1,10 +1,21 @@
 <?php
 
 declare(strict_types=1);
-require_once "vendor/autoload.php";
+require_once __DIR__."/../vendor/autoload.php";
 
 use Task1\BidFinder;
 
+if ($argc < 2) {
+    echo "Please provide the file name as an argument\n\n";
+    echo "Usage: php run.php <file_name>\n";
+    exit(1);
+}
+
+if($argv[1] === '--help') {
+    echo "Usage: php run.php <file_name>\n";
+    exit(0);
+}
+
 $finder = new BidFinder($argv[1]);
 $solution = $finder->find();
-echo "Result: $solution->id $solution->bid \n";
+echo "Result ID: $solution->id Bid: $solution->bid \n";

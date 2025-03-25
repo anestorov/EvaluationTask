@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Task3\Maze;
 
-require_once "vendor/autoload.php";
+require_once __DIR__."/../vendor/autoload.php";
 
 
 $maze = new Maze(1);
