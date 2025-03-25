@@ -39,15 +39,15 @@ class Maze
      */
     function loadMapFromJSON(string $map): void
     {
-        if ($this->isLoaded) {
-            throw new \Exception("Map is already loaded!");
-        }
+        if ($this->isLoaded) throw new \Exception("Map is already loaded!");
 
-        $this->map = json_decode($map, true);
+        $mapArr = json_decode($map, true);
 
-        if (!$this->validateMap()) {
-            throw new \Exception("Invalid map");
-        }
+        if (!is_array($mapArr)) throw new \Exception("Invalid map");
+
+        $this->map = $mapArr;
+
+        if (!$this->validateMap()) throw new \Exception("Invalid map");
 
         $this->initializeNodes();
         $this->isLoaded = true;
@@ -60,11 +60,12 @@ class Maze
      */
     function loadMapFromFile(string $path): void
     {
-        $jsonString = file_get_contents($path);
+        if (!file_exists($path)) throw new \Exception("File not found");
 
-        if ($jsonString === false) {
-            throw new \Exception("Invalid file");
-        }
+        $jsonString = @file_get_contents($path);
+
+        if ($jsonString === false) throw new \Exception("Invalid file");
+
         $this->loadMapFromJSON($jsonString);
     }
 
@@ -237,6 +238,10 @@ class Maze
      */
     private function validateMap(): bool
     {
+        if (!is_array($this->map) || empty($this->map) || !is_array($this->map[0]) || empty($this->map[0])) {
+            return false;
+        }
+
         $rowSize = count($this->map);
         $colSize = count($this->map[0]);
 

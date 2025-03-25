@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>Word Counter</h1>
+        <p>
+            <form id="sentence-form">
+                <label for="sentence">Enter a sentence:</label>
+                <input type="text" id="data" name="data" required />
+                <button type="submit">Submit</button>
+            </form>
+        </p>
+
+        <p>
+            <form id="search-form">
+                <label for="search">Search for a word:</label>
+                <input type="text" id="search" name="word" required />
+                <button type="submit">Search</button>
+            </form>
+        </p>
+    
+        <div id="words-container">
+            <h3>Words in DB:</h3>
+            <ul id="words-list"></ul>
+        </div>
+
+        <script>
+            async function loadWords() {
+                try {
+                    const response = await fetch("server.php");
+                    const words = await response.json();
+                    const wordsList = document.getElementById("words-list");
+                    wordsList.innerHTML = "";
+                    for (const [word, count] of Object.entries(words)) {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${word}: ${count}`;
+                        wordsList.appendChild(listItem);
+                    }
+                } catch (error) {
+                    console.error("Error loading words:", error);
+                }
+            }
+
+            document
+                .getElementById("search-form")
+                .addEventListener("submit", async (event) => {
+                    event.preventDefault();
+                    const searchParams = new URLSearchParams(
+                        new FormData(event.target)
+                    );
+                    try {
+                        const response = await fetch(
+                            `server.php?${searchParams.toString()}`
+                        );
+                        const result = await response.json();
+                        if (result.word && result.count !== undefined) {
+                            alert(
+                                `Word: ${result.word}, Count: ${result.count}`
+                            );
+                        } else {
+                            alert("Word not found or no count available.");
+                        }
+                    } catch (error) {
+                        alert("Error searching for word:", error);
+                    }
+                });
+
+
+            document
+                .getElementById("sentence-form")
+                .addEventListener("submit", async (event) => {
+                    event.preventDefault();
+                    const formData = new FormData(event.target);
+                    try {
+                        event.target.reset(); // Clear the input form
+                        const response = await fetch("server.php", {
+                            method: "POST",
+                            body: formData,
+                        });
+                        const result = await response.json();
+                        if (result.status === "success") {
+                        } else if (result.status === "error") {
+                            alert(`Error: ${result.error}`);
+                        }
+                    } catch (error) {
+                        alert("Error submitting form:", error);
+                    } finally {
+                        loadWords();
+                    }
+                });
+
+            document.addEventListener("DOMContentLoaded", loadWords);
+        </script>
+    </body>
+</html>
