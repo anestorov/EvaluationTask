@@ -1,6 +1,7 @@
 {
-    "name": "anest/ad-cash",
+    "name": "anestorov/evaltask",
     "type": "project",
+    "description": "Evaluation task",
     "autoload": {
         "psr-4": {
             "Task1\\": "task1/",
@@ -26,5 +27,6 @@
     ],
     "require-dev": {
         "phpunit/phpunit": "^12.0"
-    }
+    },
+    "license": "MIT"
 }
