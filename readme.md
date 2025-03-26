@@ -60,8 +60,8 @@ The main desing decision I made for that task was to create a **storage** with s
 For **counting of words** I utilize a hash map (PHP's associative array) inside **AtomicWriter** class where its key is the word and its value is the frequency of the word in record. Each instance of the classs loads the map in memory, process passed sentence to words, update their frequences and stores the map in an atomic way ensured by the file locking. That hash map iS stored as json encoded object in the srote file.
 
 **AtomicReader** class ensures lock based retrival of the json object, converting it to a has map and performing efficient queries when searching for a word.
- 
-### Run the code UI in Browser
+
+### Run the code in Browser
 
 Open your terminal, `cd` to the projects root directory and execute the following to start your backend server.
 
@@ -73,13 +73,13 @@ Then Open your browser to address http://localhost:8888 or http://127.0.0.1:8888
 
 ## 3: Escape a labyrinth
 
-This task was very interesting. At first I realized that matrix labirinth can be represented as a graph and explored using BFS or DFS algorithms. Since the goal was to find the shortest path not just any path I had to choose **BFS**. However the requirement that a wall can be broken once was a bit challenging. My first thought was to produce multiple variations of the labirinth removing one wall cell at a time and exploring each one but that was very inefficient.  
+This task was very interesting. At first I realized that matrix labirinth can be represented as a graph and explored using BFS or DFS algorithms. Since the goal was to find the shortest path not just any path I had to choose **BFS**. However the requirement that a wall can be broken once was a bit challenging. My first thought was to produce multiple variations of the labirinth removing one wall cell at a time and exploring each one but that was very inefficient.
 
-Then I got the realization that I can track **multiple paths** to each explored node (labirinth cell) but also explore walls as valid nodes. So I designed it initially with 2 paths - one that represents a path not braking any walls and second path that represents one wall. The idea was that when exploring a wall cell its path can be the non-wall-breaking path of its parent + current cell. At that wall cell the non-wall-breaking path is discontinued and only its through-one-wall path contunues to be inhereted by its subsequent neightours. This led to the idea that I can store those paths in a array ordered by the number of walls it break. 0th index has non wall-breaking path, 1th index - one wall broken etc. So when exploring a wall cell I can set every path to its parent's n-1 path and discontinue the 0th path. This led to generalizing the algorith and achiving a way to calculate the optimal path through variable number of walls.  
+Then I realize that I can keep track of **multiple paths** to each explored node (labirinth cell) and also explore walls as valid nodes since they can be passed. So I designed it initially with 2 paths - one that represents a path not braking any walls and second path that represents passing through one wall. The idea was that when exploring a wall cell its path can be calculated by the non-wall-breaking path of its parent + the current cell. At that wall cell the non-wall-breaking path is discontinued and only its through-one-wall path contunues to be passed to its subsequent neightours. This led to the idea that I can store those paths in a array ordered by the number of walls it break. 0th index has non wall-breaking path, 1th index - one wall broken etc. So when exploring a wall cell I can set every n<sup>th</sup> path to its parent's n-1 path and discontinue the 0th path. This led to generalizing the algorithm and achiving a way to calculate the optimal path through variable number of walls.
 
-The searching algorith is almost tipical BFS where it starts from the root none (labirinth entrance) and explore each neighbour by puting to a **FIFO Queue**. While the queue has entries or the end node is reached it pops elements out of the queue and compares it with its neighbourhs node's paths. If a shortest path is found the path is updated and node is re-queued for subsequent exploration of its neighbours. 
+The searching algorith is almost tipical **BFS** where it starts from the root none (labirinth entrance) and explore each neighbour by puting to a **FIFO Queue**. While the queue has entries or the end node is reached it pops elements out of the queue and compares it with its neighbourhs node's paths. If a shortest path is found the path is updated and node is re-queued for subsequent exploration of its neighbours.
 
-For achiving more readible code I made 2 helper classes - **MazeNode** - which represents a labirinth cell or grapgh node and **MazePath** - representing each path to particular node as an array of MazeNodes 
+For achiving more readible code I made 2 helper classes - **MazeNode** - which represents a labirinth cell or grapgh node and **MazePath** - representing each path to particular node as an array of MazeNodes
 
 ### Run the code UI in Browser
 
@@ -91,15 +91,18 @@ composer task3
 
 Then Open browser to address http://localhost:8888 or http://127.0.0.1:8888
 
-Animation feature can play back the solution
+#### Using that web UI users can create new maps of the labirinth, store and solve them
 
-Labes help visualize every node path
+| Breaking 0 walls                 | Breaking 1 walls                 |
+| -------------------------------- | -------------------------------- |
+| <img src="task3/img/demo4.png"/> | <img src="task3/img/demo3.png"/> |
 
-![alt text](task3/demo1.png)
+| Breaking 1 Wall                  | Breaking 2 walls                 |
+| -------------------------------- | -------------------------------- |
+| <img src="task3/img/demo1.png"/> | <img src="task3/img/demo2.png"/> |
 
-![alt text](task3/demo2.png)
-
-
+*Animation feature can play back the solution  
+*Labes help visualize every node path
 
 ### Run the code in CLI
 

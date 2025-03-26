@@ -16,6 +16,12 @@ if($argv[1] === '--help') {
     exit(0);
 }
 
+$startTime = microtime(true);  
+
 $finder = new BidFinder($argv[1]);
 $solution = $finder->find();
-echo "Result ID: $solution->id Bid: $solution->bid \n";
+echo "Result ID: $solution->id Bid: $solution->bid \n\n";
+
+$endTime = microtime(true);
+echo "Execution time: " . round($endTime - $startTime,5) . " seconds\n";
+echo 'Memory usage: ' . memory_get_peak_usage(true) / 1024 . " Kb\n";

@@ -16,7 +16,7 @@ class CsvParser
     /**
      * CsvParser constructor. It requires the class of the data model for each row
      * 
-     * @param class-string<T> $rowClass The class of the row model
+     * @param class-string<T> $modelClass The class of the row model
      * @param bool $skipHeader Whether to skip the header row
      * @param string $separator The separator character
      * @param string $enclosure The enclosure character

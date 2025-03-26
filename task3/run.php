@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 use Task3\Maze;
 
-require_once __DIR__."/../vendor/autoload.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 
+if ($argc < 2) {
+    echo "Please provide a file name";
+    exit;
+}
 
-$maze = new Maze(1);
+$uri = __DIR__ . "/../data/task3/" . $argv[1];
+if (!file_exists($uri)) {
+    echo "File not found";
+    exit;
+}
+$maze = new Maze($argc > 2 ? $argv[2] : 1);
 
-$maze->loadMapFromFile("data/task3/case1.json");
+$maze->loadMapFromFile($uri);
 if (!$maze->solve()) {
     echo "No path found";
     exit;
@@ -17,11 +26,3 @@ if (!$maze->solve()) {
 
 echo "Path Length: " . $maze->getSolution()->length() . PHP_EOL;
 echo "Path: " . json_encode($maze->getSolution()) . PHP_EOL;
-echo "Itterations: " . count($maze->getItterations()) . PHP_EOL;
-
-// foreach ($maze->getItterations() as $node) {
-//     echo $node->toJSON(true) . PHP_EOL;
-// }
-
-
-//echo json_encode($maze->getMap());

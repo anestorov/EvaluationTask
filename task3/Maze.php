@@ -27,7 +27,7 @@ class Maze
      * Requires the number of walls that can be broken
      * @param int $numberOfWallsThatCanBeBroken
      */
-    function __construct(int $numberOfWallsThatCanBeBroken)
+    function __construct(int $numberOfWallsThatCanBeBroken, private bool $trackItterations = false)
     {
         $this->walls = $numberOfWallsThatCanBeBroken;
     }
@@ -92,7 +92,7 @@ class Maze
 
         while (!empty($this->queue)) {
             $node = array_shift($this->queue);
-            $this->itterations[] = clone $node;
+            if($this->trackItterations) $this->itterations[] = clone $node;
 
             if ($node->isAt($this->mapEndCoordinates())) {
                 $this->isSolved = true;
