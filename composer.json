@@ -12,7 +12,8 @@
     "scripts": {
         "test": "./vendor/bin/phpunit --testdox",
         "task2": "php -S localhost:8888 -t task2/",
-        "task3": "php -S localhost:8888 -t task3/"
+        "task3": "php -S localhost:8888 -t task3/",
+        "open-browser": "@php -r \"sleep(1); passthru((PHP_OS_FAMILY === 'Windows') ? 'start http://localhost:8888' : ((PHP_OS_FAMILY === 'Darwin') ? 'open http://localhost:8888' : 'xdg-open http://localhost:8888'));\""
     },
     "config": {
         "process-timeout": 0
