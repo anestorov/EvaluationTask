@@ -118,7 +118,7 @@ Existing test files can be processed using the following commands
     php task3/run.php case1.json
     php task3/run.php case2.json
     php task3/run.php case3.json
-    php task4/run.php case3.json
+    php task3/run.php case4.json
 ```
 
 ## Testing
